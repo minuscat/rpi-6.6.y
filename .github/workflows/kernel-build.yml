@@ -88,7 +88,30 @@ jobs:
           export IMAGE=zImage
         fi
         make O=${{github.workspace}}/build ${{matrix.defconfig}}
-        scripts/config --file ${{github.workspace}}/build/.config --set-val CONFIG_WERROR y
+        scripts/config --file ${{github.workspace}}/build/.config \
+                       --set-val CONFIG_WERROR y \
+                       --module CONFIG_TCP_CONG_DCTCP \
+                       --module CONFIG_TCP_CONG_PRAGUE \
+                       --module CONFIG_TCP_CONG_BBR \
+                       --module CONFIG_NET_IPIP \
+                       --module CONFIG_NET_CLS_U32 \
+                       --module CONFIG_NET_CLS_BASIC \
+                       --module CONFIG_NET_CLS_MATCHALL \
+                       --module CONFIG_NET_SCH_DUALPI2 \
+                       --module CONFIG_NET_SCH_PRIO \
+                       --module CONFIG_NET_SCH_FQ \
+                       --module CONFIG_NET_SCH_FQ_CODEL \
+                       --module CONFIG_NET_SCH_HTB \
+                       --module CONFIG_NET_SCH_NETEM \
+                       --module CONFIG_NET_SCH_INGRESS \
+                       --module CONFIG_NET_ACT_MIRRED \
+                       --module CONFIG_NET_ACT_POLICE \
+                       --module CONFIG_NET_ACT_CSUM \
+                       --module CONFIG_NET_ACT_PEDIT \
+                       --module CONFIG_NET_ACT_VLAN \
+                       --module CONFIG_IFB \
+                       --module CONFIG_VETH \
+                       --module CONFIG_BRIDGE
         make O=${{github.workspace}}/build -j ${{env.NUM_JOBS}} $IMAGE modules dtbs
         mkdir -p ${{github.workspace}}/install/boot/overlays
         make O=${{github.workspace}}/build INSTALL_MOD_PATH=${{github.workspace}}/install modules_install
